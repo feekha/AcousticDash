@@ -9,8 +9,8 @@ from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from dash import html, Dash, Input, State, dcc, dash_table, Output
-#import dash_bootstrap_components as dbc
+from dash import html, Dash, Output, Input, State, dcc, dash_table
+import dash_bootstrap_components as dbc
 import tkinter as tk # this library doesnt work like this when deployed...
 from weather import get_weatherdata, daily_mean, get_locs_lats_lons # import weather data funtions
 import pickle
