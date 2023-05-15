@@ -941,8 +941,8 @@ def update_excel(n_clicks):
             df.drop(['Alle_Index'],axis=1, inplace=True)
         if 'Index' in df.columns:
             df.drop(['Index'],axis=1, inplace=True)
-        df.columns = load_org_cols()
-        df.to_excel('test.xlsx', index=False) # change this path later
+        #df.columns = load_org_cols()
+        df.to_excel('Projectdata.xlsx', index=False) # change this path later
         n_clicks=0
         return n_clicks
     else:
