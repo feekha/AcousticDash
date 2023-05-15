@@ -13,7 +13,7 @@ from dash import html, Dash, Output, Input, State, dcc, dash_table
 import dash_bootstrap_components as dbc
 import tkinter as tk # this library doesnt work like this when deployed...
 from weather import get_weatherdata, daily_mean, get_locs_lats_lons # import weather data funtions
-import pickle5 as pickle
+import pickle
 from datetime import date, timedelta
 from copy import deepcopy
 import dash_daq as daq
