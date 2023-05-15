@@ -13,7 +13,7 @@ from dash import html, Dash, Input, State, dcc, dash_table, Output
 #import dash_bootstrap_components as dbc
 import tkinter as tk # this library doesnt work like this when deployed...
 from weather import get_weatherdata, daily_mean, get_locs_lats_lons # import weather data funtions
-import pickle5
+import pickle
 from datetime import date, timedelta
 from copy import deepcopy
 import dash_daq as daq
@@ -26,47 +26,47 @@ from dash.exceptions import PreventUpdate
 
 def dump_df(df):
     '''
-    Dumps excel-df as pickle5 file --> cache
+    Dumps excel-df as pickle file --> cache
     '''
-    with open('cache/df_data.pickle5', 'wb') as handle:
-        pickle5.dump(df, handle, protocol=pickle5.HIGHEST_PROTOCOL)
+    with open('cache/df_data.pickle', 'wb') as handle:
+        pickle.dump(df, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def load_df():
     '''
     Loads excel-df from cache
     '''
     with open('cache/df_data.pickle', 'rb') as handle:
-        df = pickle5.load(handle)
+        df = pickle.load(handle)
     return df
 
 def dump_weather(all_weather_dict): 
     '''
-    Dumps weather-dict as pickle5 file --> cache
+    Dumps weather-dict as pickle file --> cache
     '''
     with open('cache/weather_data.pickle', 'wb') as handle:
-        pickle5.dump(all_weather_dict, handle, protocol=pickle5.HIGHEST_PROTOCOL)
+        pickle.dump(all_weather_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
         
 def load_weather():
     '''
     Loads weather-dict from cache
     '''
     with open('cache/weather_data.pickle', 'rb') as handle:
-        all_weather_dict = pickle5.load(handle)
+        all_weather_dict = pickle.load(handle)
     return all_weather_dict
 
 def dump_org_cols(df_original_cols): 
     '''
-    Dumps original column names as pickle5 file --> cache
+    Dumps original column names as pickle file --> cache
     '''
     with open('cache/df_oroginal_cols.pickle', 'wb') as handle:
-        pickle5.dump(df_original_cols, handle, protocol=pickle5.HIGHEST_PROTOCOL)
+        pickle.dump(df_original_cols, handle, protocol=pickle.HIGHEST_PROTOCOL)
         
 def load_org_cols():
     '''
     Loads original column names from cache to export excel correctly
     '''
     with open('cache/weather_data.pickle', 'rb') as handle:
-        df_original_cols = pickle5.load(handle)
+        df_original_cols = pickle.load(handle)
     return df_original_cols
 
 def get_map_height():
@@ -960,8 +960,8 @@ if __name__ == "__main__":
     dump_df(df)
 
     all_weather_dict = get_weatherdata(df)
-    # with open('weather_data.pickle5', 'rb') as handle:
-    #     all_weather_dict = pickle5.load(handle)
+    # with open('weather_data.pickle', 'rb') as handle:
+    #     all_weather_dict = pickle.load(handle)
     for loc in all_weather_dict:
         all_weather_dict[loc]['wind_speed_100m'] = all_weather_dict[loc]['wind_speed'].multiply(1.5)
     dump_weather(all_weather_dict)
