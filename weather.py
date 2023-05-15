@@ -9,7 +9,7 @@ import requests
 import pandas as pd
 import numpy as np
 from scipy.stats import circmean
-import pickle5
+import pickle
 
 def get_locs_lats_lons(df, all_WT=False):
     '''
