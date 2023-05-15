@@ -9,7 +9,7 @@ import requests
 import pandas as pd
 import numpy as np
 from scipy.stats import circmean
-import pickle
+import pickle5
 
 def get_locs_lats_lons(df, all_WT=False):
     '''
@@ -101,8 +101,8 @@ if __name__ == "__main__":
     df = pd.read_excel(r"Projectdata_rev3.xlsx")    
     all_weather_dict = get_weatherdata(df)
     
-    with open('weather_data.pickle', 'wb') as handle:
-        pickle.dump(all_weather_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    with open('weather_data.pickle5', 'wb') as handle:
+        pickle5.dump(all_weather_dict, handle, protocol=pickle5.HIGHEST_PROTOCOL)
     
         
     

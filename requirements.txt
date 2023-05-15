@@ -9,6 +9,6 @@ requests==2.27.1
 scipy==1.7.3
 gunicorn
 dash-tools
-cloudpickle
-pickle5 
+cloudpickle5
+pickle5
 stable-baselines3
