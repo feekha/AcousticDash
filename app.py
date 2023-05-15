@@ -11,7 +11,7 @@ import numpy as np
 import plotly.express as px
 from dash import html, Dash, Output, Input, State, dcc, dash_table
 import dash_bootstrap_components as dbc
-import tkinter as tk # this library doesnt work like this when deployed...
+#import tkinter as tk # git  library doesnt work like this when deployed...
 from weather import get_weatherdata, daily_mean, get_locs_lats_lons # import weather data funtions
 import pickle
 from datetime import date, timedelta
@@ -73,9 +73,9 @@ def get_map_height():
     '''
     Define minimum height of the map, which also defines the size.
     '''
-    root = tk.Tk() # will not work like this when deployed 
-    screen_height = root.winfo_screenheight()
-    # screen_height = 900
+    #root = tk.Tk() # will not work like this when deployed 
+    #screen_height = root.winfo_screenheight()
+    screen_height = 900
     map_height = min(screen_height, 900)
     return map_height
 
