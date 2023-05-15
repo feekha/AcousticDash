@@ -10,6 +10,3 @@ requests
 scipy
 gunicorn
 dash-tools
-cloudpickle
-pickle5
-stable-baselines3
