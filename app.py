@@ -943,14 +943,18 @@ def update_excel(n_clicks):
         if 'Index' in df.columns:
             df.drop(['Index'],axis=1, inplace=True)
         #df.columns = load_org_cols()
+        '''
+
         print(os.getcwd())
         curdir = str(os.getcwd()) + '/Projectdata.xlsx'
         os.chmod( os.getcwd(), 0o777)
         #os.chmod(curdir, 0o777)
+        '''
+        df_download = dcc.send_data_frame(df.to_excel, "Projectdata_rev3.xlsx", sheet_name="Sheet_1", index=False)
 
-        df.to_excel(curdir, index=False) # change this path later
+        #df.to_excel(curdir, index=False) # change this path later
         n_clicks=0
-        return n_clicks
+        return n_clicks, df_download
     else:
         raise PreventUpdate
             
