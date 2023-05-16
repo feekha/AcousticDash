@@ -882,28 +882,7 @@ def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,
         pm_opt = get_project_managers(df)
         if str(pm) not in pm_opt:
             pm = pm_opt[0]
-        return n_clicks_save, n_clicks_load, pm_opt, pm, n_clicks_uw, opt_day_radio, val_day_radio
-    
-    # if the load excel button is clicked
-    elif n_clicks_load > 0:
-        # load df
-        df = pd.read_excel(r"Projectdata_rev3.xlsx")
-        df_original_cols = deepcopy(df.columns)
-        cols=[]
-        for col in df.columns:
-            # process column names
-            cols.append(str(col).replace('\n',' '))
-        df.columns = cols
-        # save df in cache
-        dump_df(df)
-        dump_org_cols(df_original_cols)
-        
-        # define remaining outputs
-        n_clicks_load=0
-        pm_opt = get_project_managers(df)
-        if str(pm) not in pm_opt:
-            pm = pm_opt[0]
-        return n_clicks_save, n_clicks_load, pm_opt, pm, n_clicks_uw, opt_day_radio, val_day_radio
+        return n_clicks_save, pm_opt, pm, n_clicks_uw, opt_day_radio, val_day_radio
     
     # if the update weather button is clicked
     elif n_clicks_uw > 0:
@@ -926,7 +905,38 @@ def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,
         pm_opt = get_project_managers(df)
         if str(pm) not in pm_opt:
             pm = pm_opt[0]
-        return n_clicks_save, n_clicks_load, pm_opt, pm, n_clicks_uw, opt_day_radio, val_day_radio
+        return n_clicks_save, pm_opt, pm, n_clicks_uw, opt_day_radio, val_day_radio
+        
+    # if the load excel button is clicked
+    elif upload_content is not None:
+        # load df
+        content_type, content_string = upload_content.split(',')
+        decoded = base64.b64decode(content_string)
+        
+        # build some filter here to avoid loading false data
+        try:         
+            df = pd.read_excel(io.BytesIO(decoded))
+        except Exception as e:
+            # put a good option here to see error
+            print(e)
+        
+        # get columns
+        df_original_cols = deepcopy(df.columns)
+        cols=[]
+        for col in df.columns:
+            # process column names
+            cols.append(str(col).replace('\n',' '))
+        df.columns = cols
+        # save df in cache
+        dump_df(df)
+        dump_org_cols(df_original_cols)
+        
+        # define remaining outputs
+        n_clicks_load=0
+        pm_opt = get_project_managers(df)
+        if str(pm) not in pm_opt:
+            pm = pm_opt[0]
+        return n_clicks_save, pm_opt, pm, n_clicks_uw, opt_day_radio, val_day_radio
     
     else:
         raise PreventUpdate
