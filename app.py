@@ -687,7 +687,8 @@ app.layout = html.Div(
                                             html.Button('+ Zeile', id='add-rows-button', n_clicks=0),
                                             html.Button('Speichern App', id='save-dfapp-button', n_clicks=0),
                                             html.Button('Export Excel', id='save-dfexcl-button', n_clicks=0),
-                                            html.Button('Import Excel', id='load-excl-button', n_clicks=0),
+                                            dcc.Download(id="download-df-xlsx"),
+                                            dcc.Upload(id='upload-df',children=html.Button('Import Excel', id='load-excl-button', n_clicks=0)),
                                             ]
                                         ),
                                    ]
@@ -822,7 +823,7 @@ def update_map(map_day, pm, min_ws, max_ws):
 
 @app.callback(
     Output('save-dfapp-button', 'n_clicks'),
-    Output('load-excl-button', 'n_clicks'),
+    #Output('load-excl-button', 'n_clicks'),
     Output('pm-selector','options'),
     Output('pm-selector', 'value'),
     Output('update-weather-button', 'n_clicks'),
@@ -830,7 +831,10 @@ def update_map(map_day, pm, min_ws, max_ws):
     Output('day-radio', 'value'),
     Input('update-weather-button', 'n_clicks'),
     Input('save-dfapp-button', 'n_clicks'),
-    Input('load-excl-button', 'n_clicks'),
+    #Input('load-excl-button', 'n_clicks'),
+    Input('upload-df', 'contents'),
+    State('upload-df', 'filename'),
+    State('upload-df', 'last_modified'),
     State('table', 'data'),
     State('pm-selector', 'value'),
     State('day-radio', 'options'),
