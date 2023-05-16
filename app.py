@@ -944,7 +944,11 @@ def update_excel(n_clicks):
             df.drop(['Index'],axis=1, inplace=True)
         #df.columns = load_org_cols()
         print(os.getcwd())
-        df.to_excel('Projectdata.xlsx', index=False) # change this path later
+        curdir = str(os.getcwd()) + '/Projectdata.xlsx'
+        os.chmod( os.getcwd(), 0o777)
+        #os.chmod(curdir, 0o777)
+
+        df.to_excel(curdir, index=False) # change this path later
         n_clicks=0
         return n_clicks
     else:
