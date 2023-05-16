@@ -841,7 +841,7 @@ def update_map(map_day, pm, min_ws, max_ws):
     State('day-radio', 'value'),
     State('location-selector','value'),
     )
-def table_edit(n_clicks_uw,n_clicks_save,n_clicks_load,data,pm,opt_day_radio,val_day_radio,location):
+def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,data,pm,opt_day_radio,val_day_radio,location):
     '''
     Reacts on buttons below the table, edits table and triggers basic project manager dropdown callbacks to reload app.
     '''
