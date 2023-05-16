@@ -929,12 +929,14 @@ def table_edit(n_clicks_uw,n_clicks_save,n_clicks_load,data,pm,opt_day_radio,val
 
 @app.callback(
     Output('save-dfexcl-button', 'n_clicks'),
+    Output("download-df-xlsx", "data"),
     Input('save-dfexcl-button', 'n_clicks'),
     )
 def update_excel(n_clicks):
     '''
     Export excel. Possible to overwrite excel.
     '''
+    
     if n_clicks > 0:
         df = load_df()
         # delete helper columns
