@@ -18,6 +18,7 @@ from datetime import date, timedelta
 from copy import deepcopy
 import dash_daq as daq
 from dash.exceptions import PreventUpdate
+import os
 # import dash_auth
 
 # basic authentification --> maybe change GPO (Group Policy Object)
@@ -942,7 +943,8 @@ def update_excel(n_clicks):
         if 'Index' in df.columns:
             df.drop(['Index'],axis=1, inplace=True)
         #df.columns = load_org_cols()
-        df.to_excel('/Projectdata.xlsx', index=False) # change this path later
+        print(os.getcwd())
+        df.to_excel('Projectdata.xlsx', index=False) # change this path later
         n_clicks=0
         return n_clicks
     else:
