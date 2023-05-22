@@ -50,6 +50,8 @@ for key, weather_df in all_weather_dict.items():
         #daily_weather[key] = daily_mean(weather_df, 'wind_speed', 'wind_speed_100m', 'wind_direction')
 '''
 
-df = pd.read_csv("df_data.csv")
+df = pd.read_csv("cache/users.csv")
+df = df.set_index("username").to_dict()
+df = df["password"]
 
-df.info()
+print(df)

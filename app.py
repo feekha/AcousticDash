@@ -19,7 +19,10 @@ from copy import deepcopy
 import dash_daq as daq
 from dash.exceptions import PreventUpdate
 import os
-# import dash_auth
+import dash_auth
+import json
+import base64
+import io
 
 # basic authentification --> maybe change GPO (Group Policy Object)
 # when basic auth works, uncomment and save into protected file
@@ -487,6 +490,14 @@ dbc_css = 'assets/style.css' # load style sheet
 
 app = Dash(__name__,external_stylesheets=[dbc_css])
 server = app.server # important for deploying, otherwise not needed
+
+users = pd.read_csv("cache/users.csv")
+users = users.set_index("username").to_dict()
+users = users["password"]
+
+auth = dash_auth.BasicAuth(
+    app, users
+)
 
 # create basic authentication here when its allowed in GPO
 # auth = dash_auth.BasicAuth(

@@ -102,7 +102,7 @@ if __name__ == "__main__":
     all_weather_dict = get_weatherdata(df)
     
     with open('weather_data.pickle5', 'wb') as handle:
-        pickle5.dump(all_weather_dict, handle, protocol=pickle5.HIGHEST_PROTOCOL)
+        pickle.dump(all_weather_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
         
     
