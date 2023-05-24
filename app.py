@@ -23,10 +23,14 @@ import dash_auth
 import json
 import base64
 import io
+from flask import Flask
+from flask_login import login_user, LoginManager, UserMixin, logout_user, current_user
+import dash
 
-# basic authentification --> maybe change GPO (Group Policy Object)
-# when basic auth works, uncomment and save into protected file
-# VALID_USERNAME_PASSWORD_PAIRS = [['hello', 'world']]
+import warnings
+warnings.filterwarnings("ignore")
+
+SECRET_KEY=os.urandom(12)
 
 def dump_df(df):
     '''
@@ -488,16 +492,62 @@ def build_datatable(data):
 
 dbc_css = 'assets/style.css' # load style sheet
 
-app = Dash(__name__,external_stylesheets=[dbc_css])
-server = app.server # important for deploying, otherwise not needed
+server = Flask(__name__)
+app = dash.Dash(__name__, server=server,suppress_callback_exceptions=True ,external_stylesheets=[dbc_css])
 
 users = pd.read_csv("cache/users.csv")
 users = users.set_index("username").to_dict()
 users = users["password"]
 
+#app = Dash(__name__,external_stylesheets=[dbc_css])
+#server = app.server # important for deploying, otherwise not needed
+
+# Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
+server.config.update(SECRET_KEY=SECRET_KEY)
+
+# Login manager object will be used to login / logout users
+login_manager = LoginManager()
+login_manager.init_app(server)
+login_manager.login_view = '/login'
+
+# User data model. It has to have at least self.id as a minimum
+
+
+class User(UserMixin):
+    def __init__(self, username):
+        self.id = username
+
+
+@ login_manager.user_loader
+def load_user(username):
+    ''' This function loads the user by user id. Typically this looks up the user from a user database.
+        We won't be registering or looking up users in this example, since we'll just login using LDAP server.
+        So we'll simply return a User object with the passed in username.
+    '''
+    return User(username)
+
+# User status management views
+
+
+# Login screen
+login = html.Div([dcc.Location(id='url_login', refresh=True),
+                  html.H2('''Please log in to continue:''', id='h1'),
+                  dcc.Input(placeholder='Enter your username',
+                            type='text', id='uname-box'),
+                  dcc.Input(placeholder='Enter your password',
+                            type='password', id='pwd-box'),
+                  html.Button(children='Login', n_clicks=0,
+                              type='submit', id='login-button'),
+                  html.Div(children='', id='output-state'),
+                  html.Br()])
+
+
+
+'''
 auth = dash_auth.BasicAuth(
     app, users
 )
+'''
 
 # create basic authentication here when its allowed in GPO
 # auth = dash_auth.BasicAuth(
@@ -507,7 +557,9 @@ auth = dash_auth.BasicAuth(
 
 # define app layout
 # !!! classnames define css style --> see assets/style.css !!!
-app.layout = html.Div(
+
+# Successful login
+success = html.Div(
     [
      # header 
      html.Div(className='row',
@@ -713,6 +765,84 @@ app.layout = html.Div(
       ]        
     )
 
+# Failed Login
+failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
+                             html.Br(),
+                             html.Div(['login'])
+                             ])  # end div
+                   ])  # end div
+
+# logout
+logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
+                   html.Br()
+                   ])  # end div
+
+# Callback function to login the user, or update the screen if the username or password are incorrect
+
+@app.callback(
+    Output('url_login', 'pathname'), Output('output-state', 'children'), 
+    [Input('login-button', 'n_clicks')], 
+    [State('uname-box', 'value'), State('pwd-box', 'value')])
+def login_button_click(n_clicks, username, password):
+
+    if username in users:
+        pwd = users[username]
+    else:
+        pwd = ''
+
+    if n_clicks > 0:
+        if password == pwd:
+            user = User(username)
+            login_user(user)
+            return '/success', ''
+        else:
+            return '/login', 'Incorrect username or password'
+    raise PreventUpdate
+
+# Main Layout
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    dcc.Location(id='redirect', refresh=True),
+    html.Div(id='page-content'),
+    dcc.Location(id='url_login', refresh=True),
+    html.H2('''Please log in to continue:''', id='h1'),
+    dcc.Input(placeholder='Enter your username', type='text', id='uname-box'),
+    dcc.Input(placeholder='Enter your password', type='password', id='pwd-box'),
+    html.Button(children='Login', n_clicks=0, type='submit', id='login-button'),
+    html.Div(id='output-state')
+])
+
+@app.callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
+              [Input('url', 'pathname')])
+def display_page(pathname):
+    ''' callback to determine layout to return '''
+    # We need to determine two things for everytime the user navigates:
+    # Can they access this page? If so, we just return the view
+    # Otherwise, if they need to be authenticated first, we need to redirect them to the login page
+    # So we have two outputs, the first is which view we'll return
+    # The second one is a redirection to another page is needed
+    # In most cases, we won't need to redirect. Instead of having to return two variables everytime in the if statement
+    # We setup the defaults at the beginning, with redirect to dash.no_update; which simply means, just keep the requested url
+    view = None
+    url = dash.no_update
+    if pathname == '/login':
+        view = login
+    elif pathname == '/success':
+        if current_user.is_authenticated:
+            view = success
+        else:
+            view = failed
+    elif pathname == '/logout':
+        if current_user.is_authenticated:
+            logout_user()
+            view = logout
+        else:
+            view = login
+            url = '/login'
+    # You could also return a 404 "URL not found" page here
+    return view, url
+
+
 @app.callback(
     Output('location-selector', 'options'),
     Output('location-selector', 'value'),
@@ -720,9 +850,9 @@ app.layout = html.Div(
     State('location-selector', 'value')
     )
 def update_pm(pm, loc):
-    '''
-    Update location selector based on choosen project manager.
-    '''
+    
+    #Update location selector based on choosen project manager.
+    
     loc = str(loc)
     df = load_df()
     locations = get_locations(pm,df)
@@ -746,9 +876,9 @@ def update_pm(pm, loc):
     Input('add-rows-button', 'n_clicks'),
     )
 def update_location(location, whole_table, n_clicks):
-    '''
-    Update table and weather forecast plots that show single location
-    '''
+    
+    #Update table and weather forecast plots that show single location
+    
     df = load_df()
     all_weather_dict = load_weather()
     df['Index'] = df.index
@@ -801,9 +931,9 @@ def update_location(location, whole_table, n_clicks):
     Input('day-selector', 'value'),
     )
 def update_day(day):
-    '''
-    Update windrose and six hours description based on selected day and location
-    '''
+    
+    #Update windrose and six hours description based on selected day and location
+    
     all_weather_dict = load_weather()
     windrose = build_windrose(day,all_weather_dict)
     zeroh, sixh, twelveh, eighteenh = sixhourssummary(day,all_weather_dict)
@@ -817,9 +947,9 @@ def update_day(day):
     Input('max-ws-input', 'value'),
     )
 def update_map(map_day, pm, min_ws, max_ws):
-    '''
-    Update map figure based on project manager, day filter and WS filter.
-    '''
+    
+    #Update map figure based on project manager, day filter and WS filter.
+    
     if min_ws == None:
         min_ws = 0 # when no min WS is given
     if max_ws == None:
@@ -853,9 +983,9 @@ def update_map(map_day, pm, min_ws, max_ws):
     State('location-selector','value'),
     )
 def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,data,pm,opt_day_radio,val_day_radio,location):
-    '''
-    Reacts on buttons below the table, edits table and triggers basic project manager dropdown callbacks to reload app.
-    '''
+    
+    #Reacts on buttons below the table, edits table and triggers basic project manager dropdown callbacks to reload app.
+    
     # if the save button is clicked
     if n_clicks_save > 0:
         df = load_df()
@@ -958,9 +1088,9 @@ def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,
     Input('save-dfexcl-button', 'n_clicks'),
     )
 def update_excel(n_clicks):
-    '''
-    Export excel. Possible to overwrite excel.
-    '''
+    
+    #Export excel. Possible to overwrite excel.
+    
     
     if n_clicks > 0:
         df = load_df()
@@ -970,13 +1100,13 @@ def update_excel(n_clicks):
         if 'Index' in df.columns:
             df.drop(['Index'],axis=1, inplace=True)
         #df.columns = load_org_cols()
-        '''
+    
 
-        print(os.getcwd())
-        curdir = str(os.getcwd()) + '/Projectdata.xlsx'
-        os.chmod( os.getcwd(), 0o777)
+        #print(os.getcwd())
+        #curdir = str(os.getcwd()) + '/Projectdata.xlsx'
+        #os.chmod( os.getcwd(), 0o777)
         #os.chmod(curdir, 0o777)
-        '''
+    
         df_download = dcc.send_data_frame(df.to_excel, "Projectdata_rev3.xlsx", sheet_name="Sheet_1", index=False)
 
         #df.to_excel(curdir, index=False) # change this path later
@@ -984,6 +1114,7 @@ def update_excel(n_clicks):
         return n_clicks, df_download
     else:
         raise PreventUpdate
+
             
 if __name__ == "__main__":
     # ------ load data initialy
