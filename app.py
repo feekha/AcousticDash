@@ -541,8 +541,6 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   html.Div(children='', id='output-state'),
                   html.Br()])
 
-
-
 '''
 auth = dash_auth.BasicAuth(
     app, users
@@ -785,13 +783,8 @@ logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
     [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
 
-    if username in users:
-        pwd = users[username]
-    else:
-        pwd = ''
-
     if n_clicks > 0:
-        if password == pwd:
+        if username == 'acoustic_user' and password == 'Growian':
             user = User(username)
             login_user(user)
             return '/success', ''
@@ -799,18 +792,44 @@ def login_button_click(n_clicks, username, password):
             return '/login', 'Incorrect username or password'
     raise PreventUpdate
 
+'''
 # Main Layout
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     dcc.Location(id='redirect', refresh=True),
     html.Div(id='page-content'),
     dcc.Location(id='url_login', refresh=True),
-    html.H2('''Please log in to continue:''', id='h1'),
+    #html.H2(Please log in to continue:, id='h1'),
     dcc.Input(placeholder='Enter your username', type='text', id='uname-box'),
     dcc.Input(placeholder='Enter your password', type='password', id='pwd-box'),
     html.Button(children='Login', n_clicks=0, type='submit', id='login-button'),
     html.Div(id='output-state')
 ])
+'''
+
+
+# Main Layout
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    dcc.Location(id='redirect', refresh=True),
+    dcc.Store(id='login-status', storage_type='session'),
+    html.Div(id='user-status-div'),
+    html.Br(),
+    html.Hr(),
+    html.Br(),
+    html.Div(id='page-content'),
+])
+
+
+@app.callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
+def login_status(url):
+    ''' callback to display login/logout link in the header '''
+    if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated \
+            and url != '/logout':  # If the URL is /logout, then the user is about to be logged out anyways
+        return dcc.Link('logout', href='/logout'), current_user.get_id()
+    else:
+        return dcc.Link('login', href='/login'), 'loggedout'
+
 
 @app.callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
               [Input('url', 'pathname')])

@@ -1,183 +1,119 @@
-import dash_core_components as dcc
-import dash_html_components as html
 import dash
-from dash.dependencies import Input, Output, State
-from sqlalchemy import Table, create_engine
-from sqlalchemy.sql import select
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
-import warnings
-import os
-from flask_login import login_user, logout_user, current_user, LoginManager, UserMixin
-import configparser
+from dash.dependencies import Input, Output, State, ALL, MATCH
+import dash_html_components as html
+import dash_core_components as dcc
+import plotly.express as px
+import json
 
-warnings.filterwarnings("ignore")
-conn = sqlite3.connect('data.sqlite')
-engine = create_engine('sqlite:///data.sqlite')
-db = SQLAlchemy()
-config = configparser.ConfigParser()
-
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), unique=True, nullable = False)
-    password = db.Column(db.String(80))
-
-Users_tbl = Table('users', Users.metadata)
+df = px.data.gapminder()
 
 app = dash.Dash(__name__)
-server = app.server
-app.config.suppress_callback_exceptions = True
 
-# config
-server.config.update(
-    SECRET_KEY=os.urandom(12),
-    SQLALCHEMY_DATABASE_URI='sqlite:///data.sqlite',
-    SQLALCHEMY_TRACK_MODIFICATIONS=False
-)
-db.init_app(server)
-# Setup the LoginManager for the server
-login_manager = LoginManager()
-login_manager.init_app(server)
-login_manager.login_view = '/login'
-#User as base
-# Create User class with UserMixin
-class Users(UserMixin, Users):
-    pass
-
-login =  html.Div([dcc.Location(id='url_login', refresh=True)
-            , html.H2('''Please log in to continue:''', id='h1')
-            , dcc.Input(placeholder='Enter your username',
-                    type='text',
-                    id='uname-box')
-            , dcc.Input(placeholder='Enter your password',
-                    type='password',
-                    id='pwd-box')
-            , html.Button(children='Login',
+app.layout = html.Div(
+    [
+        html.Div(
+            children=[
+                dcc.Dropdown(
+                    options=[{"label": i, "value": i} for i in df.country.unique()],
+                    value="Canada",
+                    id="country",
+                    style={"display": "inline-block", "width": 200},
+                ),
+                html.Button(
+                    "Add Chart",
+                    id="add-chart",
                     n_clicks=0,
-                    type='submit',
-                    id='login-button')
-            , html.Div(children='', id='output-state')
-        ]) #end div
-
-success = html.Div([dcc.Location(id='url_login_success', refresh=True)
-            , html.Div([html.H2('Login successful.')
-                    , html.Br()
-                    , html.P('Select a Dataset')
-                    , dcc.Link('Data', href = '/data')
-                ]) #end div
-            , html.Div([html.Br()
-                    , html.Button(id='back-button', children='Go back', n_clicks=0)
-                ]) #end div
-        ]) #end div
-
-failed = html.Div([ dcc.Location(id='url_login_df', refresh=True)
-            , html.Div([html.H2('Log in Failed. Please try again.')
-                    , html.Br()
-                    , html.Div([login])
-                    , html.Br()
-                    , html.Button(id='back-button', children='Go back', n_clicks=0)
-                ]) #end div
-        ]) #end div
+                    style={"display": "inline-block"},
+                ),
+            ]
+        ),
+        html.Div(id="container", children=[]),
+    ]
+)
 
 
-app.layout= html.Div([
-            html.Div(id='page-content', className='content')
-            ,  dcc.Location(id='url', refresh=False)
-        ])
+def create_figure(column_x, column_y, country):
+    chart_type = px.line if column_x == "year" else px.scatter
+    return (
+        chart_type(df.query("country == '{}'".format(country)), x=column_x, y=column_y,)
+        .update_layout(
+            title="{} {} vs {}".format(country, column_x, column_y),
+            margin_l=10,
+            margin_r=0,
+            margin_b=30,
+        )
+        .update_xaxes(title_text="")
+        .update_yaxes(title_text="")
+    )
 
-# callback to reload the user object
-@login_manager.user_loader
-def load_user(user_id):
-    return Users.query.get(int(user_id))
+
 @app.callback(
-    Output('page-content', 'children')
-    , [Input('url', 'pathname')])
-def display_page(pathname):
-    if pathname == '/':
-        return login
-    elif pathname == '/success':
-        if current_user.is_authenticated:
-            return success
-        else:
-            return failed
+    Output("container", "children"),
+    [
+        Input("add-chart", "n_clicks"),
+        Input({"type": "dynamic-delete", "index": ALL}, "n_clicks"),
+    ],
+    [State("container", "children"), State("country", "value")],
+)
+def display_dropdowns(n_clicks, _, children, country):
+    default_column_x = "year"
+    default_column_y = "gdpPercap"
+
+    input_id = dash.callback_context.triggered[0]["prop_id"].split(".")[0]
+    if "index" in input_id:
+        delete_chart = json.loads(input_id)["index"]
+        children = [
+            chart
+            for chart in children
+            if "'index': " + str(delete_chart) not in str(chart)
+        ]
     else:
-        return '404'
-#set the callback for the dropdown interactivity
+        new_element = html.Div(
+            style={
+                "width": "23%",
+                "display": "inline-block",
+                "outline": "thin lightgrey solid",
+                "padding": 10,
+            },
+            children=[
+                html.Button(
+                    "X",
+                    id={"type": "dynamic-delete", "index": n_clicks},
+                    n_clicks=0,
+                    style={"display": "block"},
+                ),
+                dcc.Graph(
+                    id={"type": "dynamic-output", "index": n_clicks},
+                    style={"height": 300},
+                    figure=create_figure(default_column_x, default_column_y, country),
+                ),
+                dcc.Dropdown(
+                    id={"type": "dynamic-dropdown-x", "index": n_clicks},
+                    options=[{"label": i, "value": i} for i in df.columns],
+                    value=default_column_x,
+                ),
+                dcc.Dropdown(
+                    id={"type": "dynamic-dropdown-y", "index": n_clicks},
+                    options=[{"label": i, "value": i} for i in df.columns],
+                    value=default_column_y,
+                ),
+            ],
+        )
+        children.append(new_element)
+    return children
+
+
 @app.callback(
-    [Output('graph', 'figure')]
-    , [Input('dropdown', 'value')])
-def update_graph(dropdown_value):
-    if dropdown_value == 'Day 1':
-        return [{'layout': {'title': 'Graph of Day 1'}
-                , 'data': [{'x': [1, 2, 3, 4]
-                    , 'y': [4, 1, 2, 1]}]}]
-    else:
-        return [{'layout': {'title': 'Graph of Day 2'}
-                ,'data': [{'x': [1, 2, 3, 4]
-                    , 'y': [2, 3, 2, 4]}]}]
-@app.callback(
-   [Output('container-button-basic', "children")]
-    , [Input('submit-val', 'n_clicks')]
-    , [State('username', 'value'), State('password', 'value'), State('email', 'value')])
-def insert_users(n_clicks, un, pw, em):
-    hashed_password = generate_password_hash(pw, method='sha256')
-    if un is not None and pw is not None and em is not None:
-        ins = Users_tbl.insert().values(username=un,  password=hashed_password, email=em,)
-        conn = engine.connect()
-        conn.execute(ins)
-        conn.close()
-        return [login]
-    else:
-        return [html.Div([html.H2('Already have a user account?'), dcc.Link('Click here to Log In', href='/login')])]
-@app.callback(
-    Output('url_login', 'pathname')
-    , [Input('login-button', 'n_clicks')]
-    , [State('uname-box', 'value'), State('pwd-box', 'value')])
-def successful(n_clicks, input1, input2):
-    user = Users.query.filter_by(username=input1).first()
-    if user:
-        if check_password_hash(user.password, input2):
-            login_user(user)
-            return '/success'
-        else:
-            pass
-    else:
-        pass
-@app.callback(
-    Output('output-state', 'children')
-    , [Input('login-button', 'n_clicks')]
-    , [State('uname-box', 'value'), State('pwd-box', 'value')])
-def update_output(n_clicks, input1, input2):
-    if n_clicks > 0:
-        user = Users.query.filter_by(username=input1).first()
-        if user:
-            if check_password_hash(user.password, input2):
-                return ''
-            else:
-                return 'Incorrect username or password'
-        else:
-            return 'Incorrect username or password'
-    else:
-        return ''
-@app.callback(
-    Output('url_login_success', 'pathname')
-    , [Input('back-button', 'n_clicks')])
-def logout_dashboard(n_clicks):
-    if n_clicks > 0:
-        return '/'
-@app.callback(
-    Output('url_login_df', 'pathname')
-    , [Input('back-button', 'n_clicks')])
-def logout_dashboard(n_clicks):
-    if n_clicks > 0:
-        return '/'
-# Create callbacks
-@app.callback(
-    Output('url_logout', 'pathname')
-    , [Input('back-button', 'n_clicks')])
-def logout_dashboard(n_clicks):
-    if n_clicks > 0:
-        return '/'
-if __name__ == '__main__':
+    Output({"type": "dynamic-output", "index": MATCH}, "figure"),
+    [
+        Input({"type": "dynamic-dropdown-x", "index": MATCH}, "value"),
+        Input({"type": "dynamic-dropdown-y", "index": MATCH}, "value"),
+        Input("country", "value"),
+    ],
+)
+def display_output(column_x, column_y, country):
+    return create_figure(column_x, column_y, country)
+
+
+if __name__ == "__main__":
     app.run_server(debug=True)
