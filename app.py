@@ -828,7 +828,7 @@ def login_status(url):
             and url != '/logout':  # If the URL is /logout, then the user is about to be logged out anyways
         return dcc.Link('logout', href='/logout'), current_user.get_id()
     else:
-        return dcc.Link('login', href='/login'), 'loggedout'
+        return login, 'loggedout'
 
 
 @app.callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
