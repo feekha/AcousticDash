@@ -200,6 +200,8 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws):
     # maybe put this somewhere else later
     # get locations, latitudes and longitudes where all three parameters are available
     locs, lats, lons = get_locs_lats_lons(df_pm, all_WT=True) 
+
+    a = pd.DataFrame(locs).to_csv('locs.csv')
     
     if len(locs) == 0:
         map_fig = default_map() # in case no site given
@@ -1147,6 +1149,10 @@ if __name__ == "__main__":
     dump_df(df)
 
     all_weather_dict = get_weatherdata(df)
+
+    print(all_weather_dict)
+
+
     # with open('weather_data.pickle', 'rb') as handle:
     #     all_weather_dict = pickle.load(handle)
     for loc in all_weather_dict:
