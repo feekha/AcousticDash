@@ -236,8 +236,8 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority , fla
         filtered_daily_df['min. Wind speed needed'].fillna(0, inplace=True) # default lower WS for green
         filtered_daily_df['max. Wind speed needed'].fillna(100, inplace=True) # default higher WS for green
 
-        valid_ws = [filtered_daily_df['wind_speed'][i]>filtered_daily_df['min. Wind speed needed'][i]
-                   and filtered_daily_df['wind_speed'][i]<filtered_daily_df['max. Wind speed needed'][i]
+        valid_ws = [float(filtered_daily_df['wind_speed'][i])>float(filtered_daily_df['min. Wind speed needed'][i])
+                   and float(filtered_daily_df['wind_speed'][i])<float(filtered_daily_df['max. Wind speed needed'][i])
                    for i in filtered_daily_df.index] # boolean statement for WS
         valid_wd =  [filtered_daily_df['WD'][i] in
                     [s.strip() for s in filtered_daily_df['bevorz.  WR (falls bekannt)'][i].split(',')]
