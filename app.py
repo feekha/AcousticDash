@@ -185,7 +185,7 @@ def default_map():
             ))
     return map_fig
 
-def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws):
+def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority , flag_priority = 'start'):
     '''
     Builds map figure and applies filter.
     '''
@@ -251,7 +251,13 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws):
         
         filtered_daily_df = filtered_daily_df.loc[(filtered_daily_df['wind_speed']>=min_ws)] # WS filter
         filtered_daily_df = filtered_daily_df.loc[(filtered_daily_df['wind_speed']<=max_ws)] # WS filter
-        
+
+        filtered_daily_df.to_csv('a.csv')
+
+        if flag_priority == 'after':
+            filtered_daily_df = filtered_daily_df.loc[(filtered_daily_df['Priority 1-6 (low - high)']==priority)] # WS filter
+
+
         if filtered_daily_df.empty==True:
             map_fig = default_map()
         else:   
@@ -646,6 +652,15 @@ success = html.Div(
                                                 max=100,
                                                 debounce=True,
                                                 ),
+                                            dcc.Input( # filter for lower WS 
+                                                className='WS-input',
+                                                id='priority',
+                                                type='number',
+                                                placeholder='Priority',
+                                                min=1,
+                                                max=6,
+                                                debounce=True,
+                                                ),
                                             ]
                                         ),
                                html.Div(className='four columns blue-border',
@@ -966,8 +981,9 @@ def update_day(day):
     Input('pm-selector', 'value'),
     Input('min-ws-input', 'value'),
     Input('max-ws-input', 'value'),
+    Input('priority', 'value'),
     )
-def update_map(map_day, pm, min_ws, max_ws):
+def update_map(map_day, pm, min_ws, max_ws , priority) :
     
     #Update map figure based on project manager, day filter and WS filter.
     
@@ -978,9 +994,15 @@ def update_map(map_day, pm, min_ws, max_ws):
     if min_ws >= max_ws: # when min WS is higher than max WS --> everything will be filtered
         min_ws = 0
         max_ws = 0
+
+    if priority == None:
+        flag_priority = 'start'
+    else:
+        flag_priority = 'after'
+
     df = load_df()
     all_weather_dict = load_weather()
-    new_map = build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws) # build map
+    new_map = build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority,flag_priority) # build map
     return new_map
 
 @app.callback(
@@ -1149,9 +1171,6 @@ if __name__ == "__main__":
     dump_df(df)
 
     all_weather_dict = get_weatherdata(df)
-
-    print(all_weather_dict)
-
 
     # with open('weather_data.pickle', 'rb') as handle:
     #     all_weather_dict = pickle.load(handle)
