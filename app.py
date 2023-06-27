@@ -214,11 +214,16 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority , fla
             daily_loc_df['Messort'] = key
             df_list.append(daily_loc_df)
         new_daily_df = pd.concat(df_list).reset_index(drop=True)
-        
         # filter sites
         filtered_df = df.loc[locs.index] 
+
+        filtered_df.to_csv('d.csv')
+
         new_daily_df['Messort'] = new_daily_df['Messort'].astype(str)
         filtered_df['Messort'] = filtered_df['Messort'].astype(str)
+
+        filtered_df.to_csv('c.csv')
+
         for messort in filtered_df['Messort'].unique():
             if messort not in new_daily_df['Messort'].values:
                 filtered_df.drop(filtered_df[filtered_df['Messort']==messort].index, inplace=True)
@@ -249,14 +254,17 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority , fla
                                           else 0.5 if valid_ws[i] == True 
                                           else 0 for i in range(0,len(filtered_daily_df))]    
         
+        filtered_daily_df.to_csv('b.csv')
+
         filtered_daily_df = filtered_daily_df.loc[(filtered_daily_df['wind_speed']>=min_ws)] # WS filter
+
         filtered_daily_df = filtered_daily_df.loc[(filtered_daily_df['wind_speed']<=max_ws)] # WS filter
 
         filtered_daily_df.to_csv('a.csv')
 
+        
         if flag_priority == 'after':
             filtered_daily_df = filtered_daily_df.loc[(filtered_daily_df['Priority 1-6 (low - high)']==priority)] # WS filter
-
 
         if filtered_daily_df.empty==True:
             map_fig = default_map()
@@ -771,6 +779,20 @@ success = html.Div(
                                         ),
                                    ]
            ),
+    html.Div(className='twelve columns',
+              style={'height': '250px' , 
+                     'width' : '250px'}, # add some space to the bottom of the app
+              id='dummy', # dummy for callbacks
+              children=[
+                  html.Img(
+                           src=app.get_asset_url('MicrosoftTeams-image.png')                                       
+                            )
+                            ] 
+              )
+      ]        
+    )
+
+'''
      html.Div(className='twelve columns',
               style={'height': '50px'}, # add some space to the bottom of the app
               id='dummy', # dummy for callbacks
@@ -779,6 +801,7 @@ success = html.Div(
               )
       ]        
     )
+    '''
 
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
@@ -989,11 +1012,14 @@ def update_map(map_day, pm, min_ws, max_ws , priority) :
     
     if min_ws == None:
         min_ws = 0 # when no min WS is given
+        flag_priority = 'no_min_ws'
     if max_ws == None:
         max_ws = 100 # when no max WS is given
+        flag_priority = 'no_max_ws'
     if min_ws >= max_ws: # when min WS is higher than max WS --> everything will be filtered
         min_ws = 0
         max_ws = 0
+        flag_priority = 'no_min_max_ws'
 
     if priority == None:
         flag_priority = 'start'
@@ -1025,7 +1051,8 @@ def update_map(map_day, pm, min_ws, max_ws , priority) :
     State('day-radio', 'value'),
     State('location-selector','value'),
     )
-def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,data,pm,opt_day_radio,val_day_radio,location):
+def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,data,pm,opt_day_radio,
+               val_day_radio,location ):
     
     #Reacts on buttons below the table, edits table and triggers basic project manager dropdown callbacks to reload app.
     
@@ -1059,13 +1086,103 @@ def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,
         
         # save new df
         df.reset_index(drop=True,inplace=True)
+
         dump_df(df)
+
+        df.to_excel(r"Projectdata_rev3.xlsx")
+
+        if upload_content is not None:
+            # load df
+            content_type, content_string = upload_content.split(',')
+            decoded = base64.b64decode(content_string)
+        
+            # build some filter here to avoid loading false data
+            try:         
+                df = pd.read_excel(io.BytesIO(decoded))
+            except Exception as e:
+                # put a good option here to see error
+                print(e)
+
+            # get columns
+            df_original_cols = deepcopy(df.columns)
+            cols=[]
+            for col in df.columns:
+                # process column names
+                cols.append(str(col).replace('\n',' '))
+            df.columns = cols
+            # save df in cache
+
+            df1 = load_df()
+
+            print(df.loc[df.Messort == 'Schuby' , ['Auftragsdatum' , 'sonst. Bemerkungen', 'Messung 1 Datum/ MA','Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1']])
+            df.to_csv('df11.csv')
+
+            print(df.loc[df.Messort == 'Schuby' , 'Auftragsdatum'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})"))
+
+            df['Auftragsdatum']= df['Auftragsdatum'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df['Messung 1 Datum/ MA']= df['Messung 1 Datum/ MA'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df['Messung 2 Datum/ MA']= df['Messung 2 Datum/ MA'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df['Messung 3 Datum/ MA.1']= df['Messung 3 Datum/ MA.1'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+
+            print(df.loc[df.Messort == 'Schuby' , ['Auftragsdatum' , 'sonst. Bemerkungen', 'Messung 1 Datum/ MA','Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1']])
+            df.to_csv('df12.csv')
+
+            df1['Auftragsdatum']= df1['Auftragsdatum'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df1['Messung 1 Datum/ MA']= df1['Messung 1 Datum/ MA'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df1['Messung 2 Datum/ MA']= df1['Messung 2 Datum/ MA'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df1['Messung 3 Datum/ MA.1']= df1['Messung 3 Datum/ MA.1'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+
+            print(df1.loc[df1.Messort == 'Schuby' , ['Auftragsdatum' , 'sonst. Bemerkungen', 'Messung 1 Datum/ MA','Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1']])
+            
+            df2 = pd.concat([df , df1])
+
+            df2['Auftragsdatum']= df2['Auftragsdatum'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df2['Messung 1 Datum/ MA']= df2['Messung 1 Datum/ MA'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df2['Messung 2 Datum/ MA']= df2['Messung 2 Datum/ MA'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+            df2['Messung 3 Datum/ MA.1']= df2['Messung 3 Datum/ MA.1'].astype(str).str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+
+            print(df2.loc[df2.Messort == 'Schuby' , ['Auftragsdatum' , 'sonst. Bemerkungen', 'Messung 1 Datum/ MA','Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1']])
+
+            df2 = df2[['Priority 1-6 (low - high)', 'Status (messklar/on hold)',
+                        'Messort', 'Art', 'Hersteller', 'WEA-Typ',
+                        'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
+                        'DNV PM', 'Auftragsdatum', 'Kunde',
+                        'Ansprechpartner Kunde (E-Mail, phone)', 'WEA X von Y', 'Ser.-Nr.',
+                        'WP-Nr.:', 'Hubheight', 'Rotordiameter', 'HB', 'LK', 'BImschG',
+                        'Modi Liste', 'Beschwerdelage ja/nein Bemerkungen',
+                        'min. Wind speed needed', 'max. Wind speed needed',
+                        'bevorz.  WR (falls bekannt)',
+                        'Landowner of  Turbine or Measurment area',
+                        'Owner of neighbour turbines which have to be shut down',
+                        'Gridoperator EisMan', 'sonst. Bemerkungen', 'Messung 1 Datum/ MA',
+                        'Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1', 'Stand x = close',
+                        'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
+                        'L2C/ Salesforce (Link)']]
+
+            df2 = df2.reset_index(drop=True)
+            df2.drop_duplicates(inplace=True)
+            df2 = df2.reset_index(drop=True)
+            df2 = df2.drop_duplicates()
+
+            dump_df(df2)
+
+            print(df2.loc[df2.Messort == 'Schuby' , ['Auftragsdatum' , 'sonst. Bemerkungen', 'Messung 1 Datum/ MA','Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1']])
+
+            df2.to_excel(r"Projectdata_rev3.xlsx")
+
+            df.to_csv('df.csv')
+            df1.to_csv('df1.csv')
+            df2.to_csv('df2.csv')
+
+            dump_org_cols(df_original_cols)
+        
         
         # define remaining outputs
         n_clicks_save=0
         pm_opt = get_project_managers(df)
         if str(pm) not in pm_opt:
             pm = pm_opt[0]
+
         return n_clicks_save, pm_opt, pm, n_clicks_uw, opt_day_radio, val_day_radio
     
     # if the update weather button is clicked
@@ -1103,7 +1220,7 @@ def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,
         except Exception as e:
             # put a good option here to see error
             print(e)
-        
+
         # get columns
         df_original_cols = deepcopy(df.columns)
         cols=[]
@@ -1112,7 +1229,7 @@ def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,
             cols.append(str(col).replace('\n',' '))
         df.columns = cols
         # save df in cache
-        dump_df(df)
+        #dump_df(df)
         dump_org_cols(df_original_cols)
         
         # define remaining outputs
@@ -1162,10 +1279,45 @@ def update_excel(n_clicks):
 if __name__ == "__main__":
     # ------ load data initialy
     df = pd.read_excel(r"Projectdata_rev3.xlsx")
+
+    df = df[['Priority 1-6 (low - high)', 'Status (messklar/on hold)',
+                        'Messort', 'Art', 'Hersteller', 'WEA-Typ',
+                        'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
+                        'DNV PM', 'Auftragsdatum', 'Kunde',
+                        'Ansprechpartner Kunde (E-Mail, phone)', 'WEA X von Y', 'Ser.-Nr.',
+                        'WP-Nr.:', 'Hubheight', 'Rotordiameter', 'HB', 'LK', 'BImschG',
+                        'Modi Liste', 'Beschwerdelage ja/nein Bemerkungen',
+                        'min. Wind speed needed', 'max. Wind speed needed',
+                        'bevorz.  WR (falls bekannt)',
+                        'Landowner of  Turbine or Measurment area',
+                        'Owner of neighbour turbines which have to be shut down',
+                        'Gridoperator EisMan', 'sonst. Bemerkungen', 'Messung 1 Datum/ MA',
+                        'Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1', 'Stand x = close',
+                        'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
+                        'L2C/ Salesforce (Link)']]
+
+
     df_original_cols = deepcopy(df.columns)
     cols=[]
     for col in df.columns:
         cols.append(str(col).replace('\n',' '))
+
+    cols = ['Priority 1-6 (low - high)', 'Status (messklar/on hold)',
+                        'Messort', 'Art', 'Hersteller', 'WEA-Typ',
+                        'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
+                        'DNV PM', 'Auftragsdatum', 'Kunde',
+                        'Ansprechpartner Kunde (E-Mail, phone)', 'WEA X von Y', 'Ser.-Nr.',
+                        'WP-Nr.:', 'Hubheight', 'Rotordiameter', 'HB', 'LK', 'BImschG',
+                        'Modi Liste', 'Beschwerdelage ja/nein Bemerkungen',
+                        'min. Wind speed needed', 'max. Wind speed needed',
+                        'bevorz.  WR (falls bekannt)',
+                        'Landowner of  Turbine or Measurment area',
+                        'Owner of neighbour turbines which have to be shut down',
+                        'Gridoperator EisMan', 'sonst. Bemerkungen', 'Messung 1 Datum/ MA',
+                        'Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1', 'Stand x = close',
+                        'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
+                        'L2C/ Salesforce (Link)']
+    
     df.columns = cols
     dump_org_cols(df_original_cols)
     dump_df(df)
