@@ -36,6 +36,8 @@ def dump_df(df):
     '''
     Dumps excel-df as pickle file --> cache
     '''
+
+    
     with open('cache/df_data.pickle', 'wb') as handle:
         pickle.dump(df, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -1278,23 +1280,27 @@ def update_excel(n_clicks):
             
 if __name__ == "__main__":
     # ------ load data initialy
+
+
+    print(pd. __version__)
+
     df = pd.read_excel(r"Projectdata_rev3.xlsx")
 
-    df = df[['Priority 1-6 (low - high)', 'Status (messklar/on hold)',
-                        'Messort', 'Art', 'Hersteller', 'WEA-Typ',
-                        'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
-                        'DNV PM', 'Auftragsdatum', 'Kunde',
-                        'Ansprechpartner Kunde (E-Mail, phone)', 'WEA X von Y', 'Ser.-Nr.',
-                        'WP-Nr.:', 'Hubheight', 'Rotordiameter', 'HB', 'LK', 'BImschG',
-                        'Modi Liste', 'Beschwerdelage ja/nein Bemerkungen',
-                        'min. Wind speed needed', 'max. Wind speed needed',
-                        'bevorz.  WR (falls bekannt)',
-                        'Landowner of  Turbine or Measurment area',
-                        'Owner of neighbour turbines which have to be shut down',
-                        'Gridoperator EisMan', 'sonst. Bemerkungen', 'Messung 1 Datum/ MA',
-                        'Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1', 'Stand x = close',
-                        'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
-                        'L2C/ Salesforce (Link)']]
+    df = df[['Priority\n1-6\n(low - high)', 'Status\n(messklar/on hold)', 'Messort',
+       'Art', 'Hersteller', 'WEA-Typ',
+       'Projektnumber \n(link to PowerBI PM Dashboard)', 'Projectname',
+       'DNV PM', 'Auftragsdatum', 'Kunde',
+       'Ansprechpartner\nKunde\n(E-Mail, phone)', 'WEA X von Y', 'Ser.-Nr.',
+       'WP-Nr.:', 'Hubheight', 'Rotordiameter', 'HB', 'LK', 'BImschG',
+       'Modi\nListe', 'Beschwerdelage\nja/nein\nBemerkungen',
+       'min. Wind speed needed', 'max. Wind speed needed',
+       'bevorz.  WR\n(falls bekannt)',
+       'Landowner of \nTurbine or Measurment area',
+       'Owner of neighbour\nturbines which have to be shut down',
+       'Gridoperator\nEisMan', 'sonst. Bemerkungen', 'Messung 1\nDatum/ MA',
+       'Messung 2\nDatum/ MA', 'Messung 3\nDatum/ MA.1', 'Stand\nx = close',
+       'Link\nproject folder Acoustics', 'Breitengrad', 'Längengrad',
+       'L2C/\nSalesforce (Link)']]
 
 
     df_original_cols = deepcopy(df.columns)
@@ -1321,6 +1327,7 @@ if __name__ == "__main__":
     df.columns = cols
     dump_org_cols(df_original_cols)
     dump_df(df)
+
 
     all_weather_dict = get_weatherdata(df)
 
