@@ -192,6 +192,8 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority , fla
     Builds map figure and applies filter.
     '''
 
+    print(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority)
+
     day = str(map_day)
     pm = str(pm)
     if pm == 'Alle PM':
@@ -232,9 +234,13 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority , fla
         
         # join site-filtered and daily average df
         filtered_daily_df = filtered_df.join(new_daily_df.set_index('Messort'), on = 'Messort') 
+
+        print(filtered_daily_df.shape , filtered_daily_df)
+        filtered_daily_df.to_csv('filtered-daily_df.csv')
         
         # bin wind directions
         wds, dirs = sort_wd(filtered_daily_df)
+        print(wds , dirs , filtered_daily_df.shape , len(wds) , len(dirs))
         filtered_daily_df['WD'] = wds
         filtered_daily_df['WEA X von Y'] = filtered_daily_df['WEA X von Y'].fillna(' ') # fill nan
         filtered_daily_df['bevorz.  WR (falls bekannt)'] =  filtered_daily_df['bevorz.  WR (falls bekannt)'].fillna('all') # empty WD will allow all WD as green
@@ -382,6 +388,8 @@ def build_windrose(day,all_weather_dict):
         day = str(day)
         location, day = day.rsplit(' ',1) # get location and day from dropdown value   
         one_day_df = all_weather_dict[location].loc[all_weather_dict[location]['day'].astype(str) == day] # get selected day from excel-df
+        
+
         
         wds, dirs = sort_wd(one_day_df) # bin wind directions   
         

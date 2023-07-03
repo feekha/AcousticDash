@@ -1,73 +1,108 @@
-import pandas as pd
+'''
 
-df = pd.read_excel(r"Projectdata_rev3.xlsx")
+import pysftp as sftp
 
-locs = df['Messort']
-lats = df['Breitengrad']
-lons = df['Längengrad']
-    
-for i in [locs, lats, lons]:
-       idx = i[i.isna()].index
-       print(idx , i)
-       locs = locs.drop(idx, errors='ignore')
-       lats = lats.drop(idx, errors='ignore')
-       lons = lons.drop(idx, errors='ignore')
+
+class My_Connection(sftp.Connection):
+    def __init__(self, *args, **kwargs):
+        self._sftp_live = False
+        self._transport = None
+        super().__init__(*args, **kwargs)
+
+with sftp.Connection('us-securetransfer.dnv.com' , 'measurementsne' , 'yerD!Hvdt8n5ysh!t') as pythonsftp:
+    print("succesful")
+
+'''
 
 
 '''
-df = pd.read_csv('df.csv')
 
-df['Auftragsdatum']= df['Auftragsdatum'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df['Messung 1 Datum/ MA']= df['Messung 1 Datum/ MA'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df['Messung 2 Datum/ MA']= df['Messung 2 Datum/ MA'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df['Messung 3 Datum/ MA.1']= df['Messung 3 Datum/ MA.1'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+import paramiko
 
-print(df.loc[df.Messort == 'WP Thüle' , 'Auftragsdatum'])
+command = "ls"
 
-df1 = pd.read_csv('df1.csv')
+# Update the next three lines with your
+# server's information
 
-df1['Auftragsdatum']= df1['Auftragsdatum'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df1['Messung 1 Datum/ MA']= df1['Messung 1 Datum/ MA'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df1['Messung 2 Datum/ MA']= df1['Messung 2 Datum/ MA'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df1['Messung 3 Datum/ MA.1']= df1['Messung 3 Datum/ MA.1'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+host = "us-securetransfer.dnv.com"
+username = "measurementsne"
+password = "yerD!Hvdt8n5ysh!t"
+
+client = paramiko.client.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+client.connect(host, port = 22, username=username, password=password,key_filename='measurementsneprivate.ppk')
+print(client)
+
+sftpp = client.open_sftp()
+
+print(sftpp)
+#_stdin, _stdout,_stderr = client.exec_command("ls")
+#print(_stdout.read().decode())
+#client.close()
+
+'''
+
+import paramiko.ssh_exception
+import paramiko
+
+host = "us-securetransfer.dnv.com"                    #hard-coded
+port = 22
+
+password = "yerD!Hvdt8n5ysh!t"                #hard-coded
+username = "measurementsne"  
+
+def handler(title, instructions, fields):
+    if len(fields) > 1:
+        raise paramiko.SSHException("Expecting one field only.")
+    return [password]
+
+transport = paramiko.Transport(host , port) 
+transport.connect(username='measurementsne')
+transport.auth_interactive(username, handler)
+              #hard-coded
+#transport.connect(username = username, password = password)
+
+print(transport)
+
+#sftp = paramiko.SFTPClient.from_transport(transport)
+
+#import sys
+#path = './THETARGETDIRECTORY/' + sys.argv[1]    #hard-coded
+#localpath = sys.argv[1]
+#sftp.put(localpath, path)
+
+#sftp.close()
+#transport.close()
+#print 'Upload done.'
 
 
-print(df1.loc[df.Messort == 'WP Thüle' , 'Auftragsdatum'])
 
-df2 = pd.concat([df , df1])
 
-df2['Auftragsdatum']= df2['Auftragsdatum'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df2['Messung 1 Datum/ MA']= df2['Messung 1 Datum/ MA'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df2['Messung 2 Datum/ MA']= df2['Messung 2 Datum/ MA'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
-df2['Messung 3 Datum/ MA.1']= df2['Messung 3 Datum/ MA.1'].str.extract(r"(\d{4}-\d{2}-\d{2})").fillna('')
+'''
 
-df2 = df2[['Priority 1-6 (low - high)', 'Status (messklar/on hold)',
-       'Messort', 'Art', 'Hersteller', 'WEA-Typ',
-       'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
-       'DNV PM', 'Auftragsdatum', 'Kunde',
-       'Ansprechpartner Kunde (E-Mail, phone)', 'WEA X von Y', 'Ser.-Nr.',
-       'WP-Nr.:', 'Hubheight', 'Rotordiameter', 'HB', 'LK', 'BImschG',
-       'Modi Liste', 'Beschwerdelage ja/nein Bemerkungen',
-       'min. Wind speed needed', 'max. Wind speed needed',
-       'bevorz.  WR (falls bekannt)',
-       'Landowner of  Turbine or Measurment area',
-       'Owner of neighbour turbines which have to be shut down',
-       'Gridoperator EisMan', 'sonst. Bemerkungen', 'Messung 1 Datum/ MA',
-       'Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1', 'Stand x = close',
-       'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
-       'L2C/ Salesforce (Link)']]
+
+from paramiko import Transport, SFTPClient, RSAKey
+key = RSAKey(filename='id_rsa')
+con = Transport('us-securetransfer.dnv.com', 22)
+con.connect(username='measurementsne', password='yerD!Hvdt8n5ysh!t')
+print(con)
+sftp = SFTPClient.from_transport(con)
+#sftp.listdir(path='.')
 
 
 
-df2 = df2.reset_index(drop=True)
-df2.drop_duplicates(inplace=True)
-df2 = df2.reset_index(drop=True)
-df2 = df2.drop_duplicates()
+from paramiko import Transport, SFTPClient, RSAKey
 
-df2.loc[df2.Messort == 'WP Thüle'].to_csv('b.csv')
-#df2['Auftragsdatum']= pd.to_datetime(df2['Auftragsdatum'][0:10])
-print(df2.loc[df2.Messort == 'WP Thüle'])
-#print(df2['Auftragsdatum'].str.split(' '))
+import paramiko
+k = paramiko.RSAKey.from_private_key_file("id_rsa")
+c = paramiko.SSHClient()
+c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+print("connecting")
+c.connect( hostname = "us-securetransfer.dnv.com", username = "measurementsne", password='yerD!Hvdt8n5ysh!t',allow_agent=False,look_for_keys=False)
+print("connected" , c)
 
-print(df1.loc[df2.Messort == 'WP Thüle' , ['Auftragsdatum' , 'sonst. Bemerkungen', 'Messung 1 Datum/ MA','Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1']])
+_stdin, _stdout,_stderr = c.exec_command("ls -l")
+output = _stdout.read()
+print(output)
+
 '''
