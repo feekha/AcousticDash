@@ -1294,8 +1294,6 @@ if __name__ == "__main__":
 
     df = pd.read_excel(r"Projectdata_rev3.xlsx")
 
-    print(df.columns)
-
     df = df[['Priority 1-6 (low - high)', 'Status (messklar/on hold)', 'Messort',
        'Art', 'Hersteller', 'WEA-Typ',
        'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
@@ -1311,7 +1309,6 @@ if __name__ == "__main__":
        'Messung 2 Datum/ MA', 'Messung 3 Datum/ MA.1', 'Stand x = close',
        'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
        'L2C/ Salesforce (Link)']]
-
 
     df_original_cols = deepcopy(df.columns)
     cols=[]
