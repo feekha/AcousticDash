@@ -103,7 +103,7 @@ def get_project_managers(df):
     '''
     Determine all projectmanagers from excel-df.
     '''
-    project_managers = df['DNV PM'].unique()
+    project_managers = df["DNV PM"].unique()
     project_managers = [p for p in project_managers if pd.isnull(p)==False]
     project_managers.insert(0, 'Alle PM') # insert Alle PM as an option to get all locations
     return project_managers
@@ -199,7 +199,7 @@ def build_map_figure(map_day,pm,df,all_weather_dict,min_ws,max_ws,priority , fla
     if pm == 'Alle PM':
         df_pm = df
     else:
-        df_pm = df[df['DNV PM']==pm] # filter sites
+        df_pm = df[df["DNV PM"]==pm] # filter sites
         
     # maybe put this somewhere else later
     # get locations, latitudes and longitudes where all three parameters are available
@@ -1156,7 +1156,7 @@ def table_edit(n_clicks_uw,n_clicks_save,upload_content,upload_name,upload_date,
             df2 = df2[['Priority 1-6 (low - high)', 'Status (messklar/on hold)',
                         'Messort', 'Art', 'Hersteller', 'WEA-Typ',
                         'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
-                        'DNV PM', 'Auftragsdatum', 'Kunde',
+                        "DNV PM", 'Auftragsdatum', 'Kunde',
                         'Ansprechpartner Kunde (E-Mail, phone)', 'WEA X von Y', 'Ser.-Nr.',
                         'WP-Nr.:', 'Hubheight', 'Rotordiameter', 'HB', 'LK', 'BImschG',
                         'Modi Liste', 'Beschwerdelage ja/nein Bemerkungen',
@@ -1289,11 +1289,13 @@ def update_excel(n_clicks):
 if __name__ == "__main__":
     # ------ load data initialy
 
-
-    print(pd. __version__)
-
     df = pd.read_excel(r"Projectdata_rev3.xlsx")
 
+    #print(df)
+    
+    #print(df.columns)
+
+    
     df = df[['Priority 1-6 (low - high)', 'Status (messklar/on hold)', 'Messort',
        'Art', 'Hersteller', 'WEA-Typ',
        'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
@@ -1310,11 +1312,14 @@ if __name__ == "__main__":
        'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
        'L2C/ Salesforce (Link)']]
 
+    
+
     df_original_cols = deepcopy(df.columns)
     cols=[]
     for col in df.columns:
         cols.append(str(col).replace('\n',' '))
 
+    
     cols = ['Priority 1-6 (low - high)', 'Status (messklar/on hold)',
                         'Messort', 'Art', 'Hersteller', 'WEA-Typ',
                         'Projektnumber  (link to PowerBI PM Dashboard)', 'Projectname',
@@ -1331,6 +1336,7 @@ if __name__ == "__main__":
                         'Link project folder Acoustics', 'Breitengrad', 'Längengrad',
                         'L2C/ Salesforce (Link)']
     
+
     df.columns = cols
     dump_org_cols(df_original_cols)
     dump_df(df)

@@ -1,269 +1,259 @@
 ,Messort
-0,WP Thüle
-4,WP Grafeld
-5,WP Grafeld
-6,WP Grafeld
+3,WP Thüle
 7,WP Grafeld
-8,Hemme
-9,Hemme
-10,WP Strübbel
-11,Wieringerwierf NL
-13,WP Hartenfelser Kopf
-14,Dieksanderkoog
-15,Dieksanderkoog
-16,Wittenhof
-17,_Marsberg_Ersatzstandort für Janneby
-18,_Suederhackstedt_Ersatzstandort fuer Janneby
-19,Hermannsort
-20,Hermannsort
-21,Janneby
-22,Janneby
-23,WP Himmelreich
-24,WP Himmelreich
-25,WP Himmelreich
-26,WP Uetze
-27,WP Uetze
-28,WP Uetze
-29,Wilhelmshaven Westerhausen II
-30,WP Falkenhagen und Güstow
-31,WP Falkenhagen und Güstow
-32,WP Falkenhagen und Güstow
-38,WP KWK
-39,WP Mittelberg
-40,WP Norderland Ochtersum II
-41,WP Ochtersum III
-42,WP Ochtersum I
-43,WP Blomberg Neuschloo I
-45,Mönchhof Linkamp AT
-46,Mönchhof Linkamp AT
-47,Mönchhof Linkamp AT
-48,Mönchhof Linkamp AT
-49,Mönchhof Linkamp AT
-50,Mönchhof Linkamp AT
-51,Mönchhof Linkamp AT
-53,WP Bütteler Balje
-54,Olderup
-55,WP Biegen
-56,WP Biegen
-57,Reußenköge
-58,KWK
-59,Miltzow
-60,WP Neuenkirchen
-61,Dagebüll
-62,WP Brest
-64,WP Achim Bollen
-65,WP Achim Bollen
-66,WP Achim Bollen
-67,WP Holstentor
-68,WP Holstentor
-69,WP Holstentor
-70,WP Veer Dörper
-71,WP Veer Dörper
-72,WP Biegen
-73,WP Biegen
-74,WP Biegen
-75,WP Adensen
-76,WP Adensen
-77,WP Bollingstedt
-78,WP Bollingstedt
-79,WP Bollingstedt
-80,WP Hermannsort
-81,WP Hermannsort
-82,WP Hermannsort
-83,WP Hermannsort
-84,Obere Arlau II
-85,Chile
-86,Chile
-87,Chile
-88,Wehrhain
-89,Wehrhain
-94,Kattrepel II
-95,Kattrepel II
-96,Kattrepel II
-97,Kattrepel II
-98,Schneebergerhof
-99,Dagebüll
-100,Dagebüll
-101,Dagebüll
-102,Dagebüll
-103,Dagebüll
-104,Dagebüll
-105,Altengamme
-106,Altengamme
-107,WP Kuhla
-108,WP Kuhla
-109,WP Kuhla
-110,WP Kuhla
-111,Auras Süd
-112,Auras Süd
-113,Auras Süd
-114,WP Wulkow
-119,WP Janneby
-120,Stelle-Wittenwurth
-121,WP Iselbek
-122,Salzgitter
-123,Obere Arlau
-124,Ruhlsdorf
-125,WP Huje
-126,WP Huje
-127,Eichenhof
-128,Eichenhof
-129,WP Norderhamme Hollingstedt
-130,WP Norderhamme Hollingstedt
-131,Krumstedt
-132,Krumstedt
-133,WP Auras Süd
-134,Mühlenfließ
-135,Mühlenfließ
-136,Reußenköge
-137,Schrepkow
-138,Schrepkow
-139,Schrepkow
-140,Schrepkow
-141,Seelow-Gusow
-142,WP Sitten
-143,WP Sitten
-144,Goldelund
-145,Beesenberg
-146,Heiligengrabe
-147,Mühlenberg
-148,WP Neuenkirchen
-149,Südermarsch
-150,Südermarsch
-151,Fri.Ko.
-152,WP Schrepkow
-153,WP Schrepkow
-154,WP Gudendorf I
-155,WP Gudendorf I
-156,WP Gudendorf I
-157,WP Gudendorf I
-158,WP Gudendorf I
-159,WP Jerrishoe
-160,WP Jerrishoe
-161,WP Jerrishoe
-162,WP Jerrishoe
-163,WP Jerrishoe
-164,WP Süderdorf
-165,WP Hägen
-166,WP Norstedt
-167,WP Swatte Poele
-168,WP Swatte Poele
-169,WP Swatte Poele
-170,WP Swatte Poele
-171,WP Swatte Poele
-172,Dahme-Wahlsdorf
-173,Österwurth
-174,Corme
-175,Corme
-176,Wohlsdorf
-177,Wohlsdorf
-178,Hemme
-179,Schoenfeld
-180,Heckelberg
-181,Dammfleth
-182,Dammfleth
-183,Tensbüttel
-184,Tensbüttel
-185,Lohe
-186,Wunderberg
-187,Wieringermeer/NL
-188,Blauw
-189,Blauw
-190,Blauw
-191,Könau (Wrestedt)
-192,Könau (Wrestedt)
-193,Könau (Wrestedt)
-194,Reußenköge
-195,Reinbüttel
-196,Jettenbach
-197,Hämelhausen
-198,Hämelhausen
-199,WP Silberpatweg Aachen
-200,WP Silberpatweg Aachen
-202,WP Steife Brise
-203,WP Holstenniendorf
-204,WP Holstenniendorf
-205,WP Holstenniendorf
-206,WP Holstenniendorf
-207,WP Rantrum
-208,WP Rantrum
-209,WP Rantrum
-210,WP Rantrum
-211,La Jaille-Yvon FR
-212,La Jaille-Yvon FR
-213,La Jaille-Yvon FR
-214,WP Bobbau
-215,WP Bobbau
-216,WP Bobbau
-217,WP Bobbau
-218,WP Falkenwalde
-219,WP Falkenwalde
-221,Trebitz
-222,Trebitz
-223,Nordermeldorf
-224,Nordermeldorf
-225,Nordermeldorf
-226,Nordermeldorf
-227,Nordermeldorf
-228,Nordermeldorf
-229,Nordermeldorf
-230,Nordermeldorf
-231,Nordermeldorf
-232,Oldersbek
-233,Schantebüll
-234,Braderup
-235,Wöhrden
-236,Wöhrden
-237,Wöhrden
-238,Wöhrden
-239,Wöhrden
-240,Wöhrden
-241,Wöhrden
-242,Albringhausen
-248,Uelvesbüll
-249,Uelvesbüll
-250,Uelvesbüll
-251,Uelvesbüll
-252,Asch
-253,Asch
-254,Schlaa
-255,Büttler Balje
-256,Büttler Balje
-257,Regesborstel
-258,Regesborstel
-259,Wöhrden
-260,Wöhrden
-261,Wöhrden
-262,Wöhrden
-263,Wöhrden
-264,Wöhrden
-265,Wöhrden
-266,Himmelreich
-268,Hemme
-269,Dieksanderkoog
-270,Wittenhof
-271,_Marsberg_Ersatzstandort für Janneby
-272,_Suederhackstedt_Ersatzstandort fuer Janneby
-273,WP Wulkow
-274,Seelow-Gusow
-275,Dammfleth
-276,Dammfleth
-277,WP Silberpatweg Aachen
-278,WP Holstenniendorf
-279,WP Holstenniendorf
-280,WP Holstenniendorf
-281,WP Holstenniendorf
-282,Regesborstel
-283,Hellschen-Heringsand-Unterschaar
-284,Hellschen-Heringsand-Unterschaar
-285,Hellschen-Heringsand-Unterschaar
-286,Hellschen-Heringsand-Unterschaar
-287,Remmels
-288,Remmels
-289,Jahrsdorf
-290,Bankewitz
-291,Bankewitz
-292,Bankewitz
-293,Lebus
-294,Gaishecke
-295,Gaishecke
+8,WP Grafeld
+9,WP Grafeld
+10,WP Grafeld
+11,Hemme
+12,Hemme
+13,Hemme
+16,WP Strübbel
+17,Wieringerwierf NL
+23,WP Hartenfelser Kopf
+24,Dieksanderkoog
+25,Dieksanderkoog
+26,Dieksanderkoog
+27,Wittenhof
+28,Wittenhof
+29,_Marsberg_Ersatzstandort für Janneby
+30,_Suederhackstedt_Ersatzstandort fuer Janneby
+31,Hermannsort
+32,Hermannsort
+33,Janneby
+34,Janneby
+35,_Marsberg_Ersatzstandort für Janneby
+36,_Suederhackstedt_Ersatzstandort fuer Janneby
+39,WP Himmelreich
+40,WP Himmelreich
+41,WP Himmelreich
+42,WP Uetze
+43,WP Uetze
+44,WP Uetze
+45,Wilhelmshaven Westerhausen II
+46,WP Falkenhagen und Güstow
+47,WP Falkenhagen und Güstow
+48,WP Falkenhagen und Güstow
+55,WP KWK
+56,WP Mittelberg
+58,WP Norderland Ochtersum II
+59,WP Ochtersum III
+60,WP Ochtersum I
+61,WP Blomberg Neuschloo I
+65,Mönchhof Linkamp AT
+66,Mönchhof Linkamp AT
+67,Mönchhof Linkamp AT
+68,Mönchhof Linkamp AT
+69,Mönchhof Linkamp AT
+70,Mönchhof Linkamp AT
+71,Mönchhof Linkamp AT
+73,WP Bütteler Balje
+77,Olderup
+79,WP Biegen
+80,WP Biegen
+85,Reußenköge
+86,KWK
+87,Miltzow
+88,WP Neuenkirchen
+89,Dagebüll
+91,WP Brest
+96,WP Achim Bollen
+97,WP Achim Bollen
+98,WP Achim Bollen
+99,WP Holstentor
+100,WP Holstentor
+101,WP Holstentor
+102,WP Veer Dörper
+103,WP Veer Dörper
+104,WP Biegen
+105,WP Biegen
+106,WP Biegen
+107,WP Adensen
+108,WP Adensen
+109,WP Bollingstedt
+110,WP Bollingstedt
+111,WP Bollingstedt
+112,WP Hermannsort
+113,WP Hermannsort
+114,WP Hermannsort
+115,WP Hermannsort
+121,Obere Arlau II
+122,Chile
+123,Chile
+124,Chile
+125,Wehrhain
+126,Wehrhain
+131,Kattrepel II
+132,Kattrepel II
+133,Kattrepel II
+134,Kattrepel II
+136,Schneebergerhof
+137,Dagebüll
+138,Dagebüll
+139,Dagebüll
+140,Dagebüll
+141,Dagebüll
+142,Dagebüll
+143,Altengamme
+144,Altengamme
+145,WP Kuhla
+146,WP Kuhla
+147,WP Kuhla
+148,WP Kuhla
+149,Auras Süd
+150,Auras Süd
+151,Auras Süd
+152,WP Wulkow
+157,WP Janneby
+158,Stelle-Wittenwurth
+159,WP Iselbek
+161,Salzgitter
+163,Obere Arlau
+164,Ruhlsdorf
+165,WP Huje
+166,WP Huje
+167,Eichenhof
+168,Eichenhof
+169,WP Norderhamme Hollingstedt
+170,WP Norderhamme Hollingstedt
+171,Krumstedt
+172,Krumstedt
+173,WP Auras Süd
+174,Mühlenfließ
+175,Mühlenfließ
+176,Reußenköge
+177,Schrepkow
+178,Schrepkow
+179,Schrepkow
+180,Schrepkow
+181,Seelow-Gusow
+182,WP Sitten
+183,WP Sitten
+184,Goldelund
+185,Beesenberg
+187,Heiligengrabe
+188,Mühlenberg
+189,WP Neuenkirchen
+190,Südermarsch
+191,Südermarsch
+194,Fri.Ko.
+195,WP Schrepkow
+196,WP Schrepkow
+197,WP Gudendorf I
+198,WP Gudendorf I
+199,WP Gudendorf I
+200,WP Gudendorf I
+201,WP Gudendorf I
+202,WP Jerrishoe
+203,WP Jerrishoe
+204,WP Jerrishoe
+205,WP Jerrishoe
+206,WP Jerrishoe
+208,WP Süderdorf
+209,WP Hägen
+210,WP Norstedt
+211,WP Swatte Poele
+212,WP Swatte Poele
+213,WP Swatte Poele
+214,WP Swatte Poele
+215,WP Swatte Poele
+216,Dahme-Wahlsdorf
+217,Österwurth
+218,Corme
+219,Corme
+220,Wohlsdorf
+221,Wohlsdorf
+222,Hemme
+223,Schoenfeld
+224,Heckelberg
+225,Dammfleth
+226,Dammfleth
+227,Tensbüttel
+228,Tensbüttel
+229,Lohe
+230,Wunderberg
+231,Wieringermeer/NL
+232,Blauw
+233,Blauw
+234,Blauw
+235,Könau (Wrestedt)
+236,Könau (Wrestedt)
+237,Könau (Wrestedt)
+238,Reußenköge
+239,Reinbüttel
+240,Jettenbach
+241,Hämelhausen
+242,Hämelhausen
+243,WP Silberpatweg Aachen
+244,WP Silberpatweg Aachen
+246,WP Steife Brise
+247,WP Holstenniendorf
+248,WP Holstenniendorf
+249,WP Holstenniendorf
+250,WP Holstenniendorf
+251,WP Rantrum
+252,WP Rantrum
+253,WP Rantrum
+254,WP Rantrum
+255,La Jaille-Yvon FR
+256,La Jaille-Yvon FR
+257,La Jaille-Yvon FR
+258,WP Bobbau
+259,WP Bobbau
+260,WP Bobbau
+261,WP Bobbau
+262,WP Falkenwalde
+263,WP Falkenwalde
+265,Trebitz
+266,Trebitz
+268,Nordermeldorf
+269,Nordermeldorf
+270,Nordermeldorf
+271,Nordermeldorf
+272,Nordermeldorf
+273,Nordermeldorf
+274,Nordermeldorf
+275,Nordermeldorf
+276,Nordermeldorf
+277,Oldersbek
+278,Schantebüll
+279,Braderup
+280,Wöhrden
+281,Wöhrden
+282,Wöhrden
+283,Wöhrden
+284,Wöhrden
+285,Wöhrden
+286,Wöhrden
+287,Albringhausen
+294,Uelvesbüll
+295,Uelvesbüll
+296,Uelvesbüll
+297,Uelvesbüll
+299,Asch
+300,Asch
+301,Schlaa
+302,Büttler Balje
+303,Büttler Balje
+305,Regesborstel
+306,Regesborstel
+307,Wöhrden
+308,Wöhrden
+309,Wöhrden
+310,Wöhrden
+311,Wöhrden
+312,Wöhrden
+313,Wöhrden
+314,Hellschen-Heringsand-Unterschaar
+315,Hellschen-Heringsand-Unterschaar
+316,Hellschen-Heringsand-Unterschaar
+317,Hellschen-Heringsand-Unterschaar
+318,Himmelreich
+335,Remmels
+336,Remmels
+337,Jahrsdorf
+340,Bankewitz
+341,Bankewitz
+342,Bankewitz
+345,Lebus
+356,Gaishecke
+357,Gaishecke
